@@ -3,15 +3,6 @@
 #define sz(x) int(x.size())
 using namespace std;
 
-bool hasDouble(int i, int tbl[100001][3], int target){
-    int t = 0;
-    if(tbl[i][0] == target) t++;
-    if(tbl[i][1] == target) t++;
-    if(tbl[i][2] == target) t++;
-
-    return (t >= 2);
-}
-
 int main(){
     int n;
     cin >> n;
@@ -20,34 +11,29 @@ int main(){
         cin >> table[i][j];
     }
 
-    int ch[100001];
-    int dp[100001];
+    int dp[100001][3];
 
     int temp = 0;
     rep(i, 3){
         if(temp < table[0][i]){
-            ch[0] = i;
-            temp = table[0][i];
+            dp[0][i] = table[0][i];
         }
     }
-    dp[0] = temp;
 
     for(int i = 1; i < n; i++){
-        temp = 0;
         rep(j, 3){
-            if(temp < dp[i-1] + table[i][j] && ch[i-1]!=j){
-                ch[i]=j;
-                temp = dp[i-1] + table[i][j];
-            }else if(temp < dp[i-1] + table[i][j] && ch[i-1]==j && hasDouble(i-1, table, table[i-1][ch[i-1]])){
-                ch[i]=j;
-                temp = dp[i-1] + table[i][j];
+            int temp = 0;
+            rep(k, 3){
+                if(j!=k){
+                    temp = max(temp, dp[i-1][k] + table[i][j]);
+                }
             }
+            dp[i][j] = temp;
         }
-        // cout << temp << endl;
-        dp[i] = temp;
     }
 
+    int ans = max({dp[n-1][0], dp[n-1][1], dp[n-1][2]});
 
-    cout << dp[n-1] << endl;
+    cout << ans << endl;
     return 0;
 }
