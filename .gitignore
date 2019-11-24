@@ -5,3 +5,6 @@
 /build
 /captures
 /.vscode
+/HTTF
+/DISCO
+**/a.out
